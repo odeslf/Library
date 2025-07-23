@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: library
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/library?userTimezone=true&serverTimezone=UTC
+    username: root
+    password: Pigmeu97
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+    show-sql: false
+    open-in-view: false
+logging:
+  level:
+    # root: warn
+    com.mybooks.library: DEBUG
