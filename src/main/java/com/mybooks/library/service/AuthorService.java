@@ -37,7 +37,7 @@ public class AuthorService {
                     log.warn("Author with id {} not found", id);
                     return new ResourceNotFoundException("Author with id " + id + " not found");
                 });
-        AuthorDTO dto = DozerMapper.parseObject(entity, AuthorDTO.class);
+        AuthorDTO dto = parseObject(entity, AuthorDTO.class);
         return dto;
     }
 
@@ -47,9 +47,9 @@ public class AuthorService {
             throw new RequiredObjectIsNullException();
         }
         log.info("Creating author {}", authorDTO);
-        var entity = DozerMapper.parseObject(authorDTO, Author.class);
+        var entity = parseObject(authorDTO, Author.class);
         var persisted = repository.save(entity);
-        AuthorDTO createdDTO = DozerMapper.parseObject(persisted, AuthorDTO.class);
+        AuthorDTO createdDTO = parseObject(persisted, AuthorDTO.class);
         log.info("Successfully created author {}", createdDTO);
         return createdDTO;
     }
@@ -77,7 +77,7 @@ public class AuthorService {
         entity.setBirthDate(authorDTO.getBirthDate());
 
         var persisted = repository.save(entity);
-        AuthorDTO updatedDTO = DozerMapper.parseObject(persisted, AuthorDTO.class);
+        AuthorDTO updatedDTO = parseObject(persisted, AuthorDTO.class);
 
         log.info("Successfully updated author {}", updatedDTO);
         return updatedDTO;
