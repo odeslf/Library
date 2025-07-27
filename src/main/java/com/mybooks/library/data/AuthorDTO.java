@@ -1,5 +1,6 @@
 package com.mybooks.library.data;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,7 @@ public class AuthorDTO  extends RepresentationModel<AuthorDTO> implements Serial
     private String firstName;
     private String lastName;
     private String country;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR")
     private LocalDate birthDate;
 }

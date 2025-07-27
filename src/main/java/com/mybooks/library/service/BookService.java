@@ -21,6 +21,7 @@ public class BookService {
 
     @Autowired
     private BookRepository bookRepository;
+
     private Logger log = LoggerFactory.getLogger(BookService.class);
 
     public List<BookDTO> findAllBooks() {

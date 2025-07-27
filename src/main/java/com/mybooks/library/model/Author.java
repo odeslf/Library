@@ -27,7 +27,7 @@ public class Author {
     @Column(nullable = false, length = 50)
     private String country;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR")
     @Column(name = "birth_date", nullable = true, length = 10)
     private LocalDate birthDate;
 
