@@ -1,6 +1,7 @@
 package com.mybooks.library.service;
 
 import com.github.dozermapper.core.Mapper;
+import com.mybooks.library.controller.BookController;
 import com.mybooks.library.data.BookDTO;
 import com.mybooks.library.exception.RequiredObjectIsNullException;
 import com.mybooks.library.exception.ResourceNotFoundException;
@@ -12,10 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class BookService {
@@ -33,11 +36,16 @@ public class BookService {
         this.mapper = mapper;
     }
 
-    public List<BookDTO> findAllBooks() {
+    public List<BookDTO> findAll() {
         log.info("Finding all books");
-        return bookRepository.findAll().stream()
+        List<BookDTO> books =  bookRepository.findAll().stream()
                 .map(book -> mapper.map(book, BookDTO.class))
                 .collect(Collectors.toList());
+
+        for(BookDTO book : books){
+            AddHateoasLinks(book);
+        }
+        return books;
     }
 
     public BookDTO findById(Long id) {
@@ -47,6 +55,7 @@ public class BookService {
             return new ResourceNotFoundException("Book with id " + id + " not found");
         });
         BookDTO bookDTO = mapper.map(entity, BookDTO.class);
+        AddHateoasLinks(bookDTO);
         return bookDTO;
     }
 
@@ -58,12 +67,16 @@ public class BookService {
                     return new ResourceNotFoundException("Author with id " + authorId + " not found");
                 });
         List<Book> books = bookRepository.findByAuthorId(authorId);
-        return books.stream()
+
+        List<BookDTO> bookDTOS = books.stream()
                 .map(book -> mapper.map(book, BookDTO.class))
                 .collect(Collectors.toList());
+        for(BookDTO bookDTO : bookDTOS){
+            AddHateoasLinks(bookDTO);
+        }
+        return bookDTOS;
     }
 
-    @Transactional
     public BookDTO create(BookDTO bookDTO) {
         if(bookDTO == null) {
             log.error("Attempt to create a null BookDTO");
@@ -87,12 +100,13 @@ public class BookService {
 
         var persisted = bookRepository.save(entity);
         BookDTO persistedDTO = mapper.map(persisted, BookDTO.class);
+        AddHateoasLinks(persistedDTO);
 
         log.info("Successfully created book {}", persistedDTO);
+
         return persistedDTO;
     }
 
-    @Transactional
     public BookDTO update(BookDTO bookDTO) {
         if(bookDTO == null) {
             log.error("Attempt to update a Book with a null object");
@@ -114,6 +128,7 @@ public class BookService {
         var persisted = bookRepository.save(entity);
         BookDTO updatedDTO = mapper.map(persisted, BookDTO.class);
 
+        AddHateoasLinks(updatedDTO);
         log.info("Successfully updated book {}", updatedDTO);
         return updatedDTO;
     }
@@ -124,5 +139,16 @@ public class BookService {
                 .orElseThrow(() ->
                     new ResourceNotFoundException("Book with id " + id + "not found"));
         bookRepository.delete(entity);
+    }
+
+    private void AddHateoasLinks(BookDTO dto) {
+        Long id = dto.getId();
+        dto.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(BookController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(BookController.class).create(null)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(BookController.class).update(null)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(BookController.class).delete(id)).withRel("delete").withType("DELETE"));
+        dto.add(linkTo(methodOn(BookController.class).findAuthorByBookId(id)).withRel("authors").withType("GET"));
+
     }
 }

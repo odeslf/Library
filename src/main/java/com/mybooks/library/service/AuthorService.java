@@ -7,6 +7,7 @@ import com.mybooks.library.exception.RequiredObjectIsNullException;
 import com.mybooks.library.exception.ResourceNotFoundException;
 import com.mybooks.library.model.Author;
 import com.mybooks.library.repository.AuthorRepository;
+import com.mybooks.library.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,20 +24,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Service
 public class AuthorService {
 
-
-    private AuthorRepository repository;
+    private final BookRepository bookRepository;
+    private final AuthorRepository repository;
     private final Mapper mapper;
 
     private Logger log = LoggerFactory.getLogger(AuthorService.class);
 
     @Autowired
-    public AuthorService(Mapper mapper, AuthorRepository repository) {
-        this.mapper = mapper;
+    public AuthorService(BookRepository bookRepository, AuthorRepository repository, Mapper mapper) {
+        this.bookRepository = bookRepository;
         this.repository = repository;
+        this.mapper = mapper;
     }
 
     public List<AuthorDTO> findAll(){
-
         log.info("Finding all authors");
         List<AuthorDTO> authors = repository.findAll().stream()
                 .map(author -> mapper.map(author, AuthorDTO.class))
@@ -49,7 +50,6 @@ public class AuthorService {
     }
 
     public AuthorDTO findById(Long id){
-
         log.info("Finding author by id {}", id);
         var entity = repository.findById(id).orElseThrow(() -> {
                     log.warn("Author with id {} not found", id);
@@ -60,6 +60,24 @@ public class AuthorService {
         return dto;
     }
 
+    public List<AuthorDTO> findAuthorByBookId(Long bookId) {
+        log.info("Finding author for book id {}", bookId);
+        bookRepository.findById(bookId)
+                .orElseThrow(() -> {
+                    log.warn("Book with id {} not found", bookId);
+                    return new ResourceNotFoundException("Book with id " + bookId + " not found");
+                });
+
+        List<Author> authors = repository.findByBooksId(bookId);
+        List<AuthorDTO> authorDTOS = authors.stream()
+                .map(author -> mapper.map(author, AuthorDTO.class))
+                .collect(Collectors.toList());
+
+        for(AuthorDTO authorDTO : authorDTOS){
+            AddHateoasLinks(authorDTO);
+        }
+        return authorDTOS;
+    }
 
     public AuthorDTO create(AuthorDTO authorDTO){
         if(authorDTO == null) {
@@ -67,14 +85,17 @@ public class AuthorService {
             throw new RequiredObjectIsNullException();
         }
         log.info("Creating author {}", authorDTO);
+
         var entity = mapper.map(authorDTO, Author.class);
         var persisted = repository.save(entity);
+
         AuthorDTO createdDTO = mapper.map(persisted, AuthorDTO.class);
         AddHateoasLinks(createdDTO);
+
         log.info("Successfully created author {}", createdDTO);
+
         return createdDTO;
     }
-
 
     public AuthorDTO update(AuthorDTO authorDTO){
 
