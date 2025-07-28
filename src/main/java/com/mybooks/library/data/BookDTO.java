@@ -22,4 +22,5 @@ public class BookDTO extends RepresentationModel<BookDTO> implements Serializabl
     private String publicationYear;
     private Integer pages;
     private Long authorId;
+    private String coverPhotoUrl;
 }

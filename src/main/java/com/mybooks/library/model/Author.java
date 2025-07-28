@@ -31,6 +31,9 @@ public class Author {
     @Column(name = "birth_date", nullable = true, length = 10)
     private LocalDate birthDate;
 
+    @Column(name = "photo_url", length = 512)
+    private String photoUrl;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Book> books;
 }

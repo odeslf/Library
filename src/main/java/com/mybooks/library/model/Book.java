@@ -29,4 +29,7 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
+
+    @Column(name = "cover_photo_url", length = 512)
+    private String coverPhotoUrl;
 }

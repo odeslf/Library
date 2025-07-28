@@ -38,6 +38,7 @@ public class AuthorService {
     }
 
     public List<AuthorDTO> findAll(){
+
         log.info("Finding all authors");
         List<AuthorDTO> authors = repository.findAll().stream()
                 .map(author -> mapper.map(author, AuthorDTO.class))
@@ -50,6 +51,7 @@ public class AuthorService {
     }
 
     public AuthorDTO findById(Long id){
+
         log.info("Finding author by id {}", id);
         var entity = repository.findById(id).orElseThrow(() -> {
                     log.warn("Author with id {} not found", id);
@@ -61,6 +63,7 @@ public class AuthorService {
     }
 
     public List<AuthorDTO> findAuthorByBookId(Long bookId) {
+
         log.info("Finding author for book id {}", bookId);
         bookRepository.findById(bookId)
                 .orElseThrow(() -> {
@@ -80,6 +83,7 @@ public class AuthorService {
     }
 
     public AuthorDTO create(AuthorDTO authorDTO){
+
         if(authorDTO == null) {
             log.error("Attemped to create an author with null object");
             throw new RequiredObjectIsNullException();
@@ -126,6 +130,7 @@ public class AuthorService {
     }
 
     public void delete(Long id){
+
         log.info("Deleting author with id {}", id);
         Author entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author with id " + id + " not found"));
@@ -140,6 +145,5 @@ public class AuthorService {
         dto.add(linkTo(methodOn(AuthorController.class).updateAuthor(null)).withRel("update").withType("PUT"));
         dto.add(linkTo(methodOn(AuthorController.class).delete(id)).withRel("delete").withType("DELETE"));
         dto.add(linkTo(methodOn(AuthorController.class).findBooksByAuthor(id)).withRel("books").withType("GET"));
-
     }
 }

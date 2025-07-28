@@ -37,6 +37,7 @@ public class BookService {
     }
 
     public List<BookDTO> findAll() {
+
         log.info("Finding all books");
         List<BookDTO> books =  bookRepository.findAll().stream()
                 .map(book -> mapper.map(book, BookDTO.class))
@@ -49,6 +50,7 @@ public class BookService {
     }
 
     public BookDTO findById(Long id) {
+
         log.info("Finding a book by id {}", id);
         var entity = bookRepository.findById(id).orElseThrow(() ->{
             log.warn("Book with id {} not found", id);
@@ -60,6 +62,7 @@ public class BookService {
     }
 
     public List<BookDTO> findBooksByAuthorId(Long authorId) {
+
         log.info("Finding all books for author with id {}", authorId);
         authorRepository.findById(authorId)
                 .orElseThrow(() -> {
@@ -78,6 +81,7 @@ public class BookService {
     }
 
     public BookDTO create(BookDTO bookDTO) {
+
         if(bookDTO == null) {
             log.error("Attempt to create a null BookDTO");
             throw new RequiredObjectIsNullException();
@@ -108,6 +112,7 @@ public class BookService {
     }
 
     public BookDTO update(BookDTO bookDTO) {
+
         if(bookDTO == null) {
             log.error("Attempt to update a Book with a null object");
             throw new RequiredObjectIsNullException();
@@ -134,6 +139,7 @@ public class BookService {
     }
 
     public void delete(Long id){
+
         log.info("Deleting book witj id {}", id);
         Book entity = bookRepository.findById(id)
                 .orElseThrow(() ->

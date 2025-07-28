@@ -25,4 +25,6 @@ public class AuthorDTO  extends RepresentationModel<AuthorDTO> implements Serial
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", locale = "pt-BR")
     private LocalDate birthDate;
+
+    private String photoUrl;
 }
