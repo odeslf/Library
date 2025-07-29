@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Autor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 20px; }
+        .author-info-card { margin-bottom: 30px; }
+        .author-info-card .card-header { background-color: #007bff; color: white; }
+        .author-photo { max-width: 200px; height: auto; border-radius: 8px; margin-right: 20px; margin-bottom: 20px; }
+        .book-list-item { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+        .book-list-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}">Mensagem de sucesso!</span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}">Mensagem de erro!</span>
+    </div>
+
+    <div class="card author-info-card">
+        <div class="card-header">
+            <h1 class="mb-0">Detalhes do Autor</h1>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center mb-4">
+                <div class="col-md-3 text-center">
+                    <img th:src="${author.photoUrl != null and author.photoUrl != '' ? author.photoUrl : 'https://via.placeholder.com/200?text=Sem+Foto'}" alt="Foto do Autor" class="author-photo img-fluid rounded">
+                </div>
+                <div class="col-md-9">
+                    <h2 th:text="${author.firstName + ' ' + author.lastName}" class="mb-2">Nome do Autor</h2>
+                    <p><strong>ID:</strong> <span th:text="${author.id}">1</span></p>
+                    <p><strong>País:</strong> <span th:text="${author.country}">Brasil</span></p>
+                    <p th:if="${author.birthDate}">
+                        <strong>Data de Nascimento:</strong> <span th:text="${#temporals.format(author.birthDate, 'dd/MM/yyyy')}">01/01/1970</span>
+                    </p>
+                    <p th:unless="${author.birthDate}">
+                        <strong>Data de Nascimento:</strong> Não informado
+                    </p>
+
+                    <div class="mt-3">
+                        <a th:href="@{/web/authors/edit/{id}(id=${author.id})}" class="btn btn-warning btn-sm">Editar Autor</a>
+                        <a th:href="@{/web/authors}" class="btn btn-secondary btn-sm ml-2">Voltar para a Lista</a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <h3>Livros de <span th:text="${author.firstName}">Nome</span></h3>
+            <div th:if="${books.isEmpty()}" class="alert alert-info mt-3" role="alert">
+                Este autor não possui livros cadastrados.
+            </div>
+            <ul class="list-unstyled mt-3" th:unless="${books.isEmpty()}">
+                <li th:each="book : ${books}" class="book-list-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            <img th:src="${book.coverPhotoUrl != null and book.coverPhotoUrl != '' ? book.coverPhotoUrl : 'https://via.placeholder.com/100?text=Sem+Capa'}" alt="Capa do Livro" class="img-fluid rounded" style="max-width: 80px; max-height: 120px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-10">
+                            <h5><a th:href="@{/web/books/{id}(id=${book.id})}" th:text="${book.title}">Título do Livro</a></h5>
+                            <p class="mb-1"><small>Gênero: <span th:text="${book.genre}">Ficção</span> | Ano: <span th:text="${book.publicationYear}">2020</span> | Páginas: <span th:text="${book.pages}">300</span></small></p>
+                            <a th:href="@{/web/books/edit/{id}(id=${book.id})}" class="btn btn-sm btn-outline-warning">Editar Livro</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

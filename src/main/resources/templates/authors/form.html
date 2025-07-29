@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Formulário de Autor</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 20px; }
+        .form-group label { font-weight: bold; }
+        .card-header { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 th:text="${pageTitle}">Cadastrar/Editar Autor</h1>
+        </div>
+        <div class="card-body">
+            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                <span th:text="${successMessage}">Mensagem de sucesso!</span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}">Mensagem de erro!</span>
+            </div>
+
+            <form th:action="@{/web/authors}" th:object="${author}" method="post">
+                <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger" role="alert">
+                    Verifique os campos abaixo:
+                    <ul>
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Erro</li>
+                    </ul>
+                </div>
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="firstName">Primeiro Nome:</label>
+                    <input type="text" id="firstName" class="form-control"
+                           th:field="*{firstName}"
+                           th:classappend="${#fields.hasErrors('firstName')} ? 'is-invalid'" />
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Sobrenome:</label>
+                    <input type="text" id="lastName" class="form-control"
+                           th:field="*{lastName}"
+                           th:classappend="${#fields.hasErrors('lastName')} ? 'is-invalid'" />
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="country">País:</label>
+                    <input type="text" id="country" class="form-control"
+                           th:field="*{country}"
+                           th:classappend="${#fields.hasErrors('country')} ? 'is-invalid'" />
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthDate">Data de Nascimento:</label>
+                    <input type="date" id="birthDate" class="form-control"
+                           th:field="*{birthDate}"
+                           th:classappend="${#fields.hasErrors('birthDate')} ? 'is-invalid'" />
+                    <small class="form-text text-muted">Formato: AAAA-MM-DD (será formatado para DD/MM/AAAA ao exibir)</small>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="photoUrl">URL da Foto:</label>
+                    <input type="url" id="photoUrl" class="form-control"
+                           th:field="*{photoUrl}"
+                           th:classappend="${#fields.hasErrors('photoUrl')} ? 'is-invalid'"
+                           placeholder="Ex: https://exemplo.com/foto_autor.jpg" />
+                    <small class="form-text text-muted">URL direta para a imagem do autor.</small>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('photoUrl')}" th:errors="*{photoUrl}"></div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success">Salvar Autor</button>
+                    <a th:href="@{/web/authors}" class="btn btn-secondary ml-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

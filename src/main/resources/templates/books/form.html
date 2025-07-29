@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Formulário de Livro</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 20px; }
+        .form-group label { font-weight: bold; }
+        .card-header { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h1 th:text="${pageTitle}">Cadastrar/Editar Livro</h1>
+        </div>
+        <div class="card-body">
+            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                <span th:text="${successMessage}">Mensagem de sucesso!</span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}">Mensagem de erro!</span>
+            </div>
+
+            <form th:action="@{/web/books}" th:object="${book}" method="post">
+                <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger" role="alert">
+                    Verifique os campos abaixo:
+                    <ul>
+                        <li th:each="err : ${#fields.allErrors()}" th:text="${err}">Erro</li>
+                    </ul>
+                </div>
+
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="title">Título:</label>
+                    <input type="text" id="title" class="form-control"
+                           th:field="*{title}"
+                           th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" />
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="genre">Gênero:</label>
+                    <input type="text" id="genre" class="form-control"
+                           th:field="*{genre}"
+                           th:classappend="${#fields.hasErrors('genre')} ? 'is-invalid'" />
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="publicationYear">Ano de Publicação:</label>
+                    <input type="text" id="publicationYear" class="form-control"
+                           th:field="*{publicationYear}"
+                           th:classappend="${#fields.hasErrors('publicationYear')} ? 'is-invalid'" />
+                    <small class="form-text text-muted">Apenas 4 dígitos numéricos.</small>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('publicationYear')}" th:errors="*{publicationYear}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="pages">Número de Páginas:</label>
+                    <input type="number" id="pages" class="form-control"
+                           th:field="*{pages}"
+                           th:classappend="${#fields.hasErrors('pages')} ? 'is-invalid'" />
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Autor:</label>
+                    <select id="author" class="form-control"
+                            th:field="*{authorId}"
+                            th:classappend="${#fields.hasErrors('authorId')} ? 'is-invalid'">
+                        <option value="">-- Selecione um Autor --</option>
+                        <option th:each="authorOption : ${authors}"
+                                th:value="${authorOption.id}"
+                                th:text="${authorOption.firstName + ' ' + authorOption.lastName}"
+                                th:selected="${authorOption.id == book.authorId}">
+                            Autor Nome Completo
+                        </option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="coverPhotoUrl">URL da Capa:</label>
+                    <input type="url" id="coverPhotoUrl" class="form-control"
+                           th:field="*{coverPhotoUrl}"
+                           th:classappend="${#fields.hasErrors('coverPhotoUrl')} ? 'is-invalid'"
+                           placeholder="Ex: https://exemplo.com/capa_livro.jpg" />
+                    <small class="form-text text-muted">URL direta para a imagem da capa do livro.</small>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('coverPhotoUrl')}" th:errors="*{coverPhotoUrl}"></div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-success">Salvar Livro</button>
+                    <a th:href="@{/web/books}" class="btn btn-secondary ml-2">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

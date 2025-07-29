@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Livraria</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding-top: 50px; background-color: #f8f9fa; }
+        .jumbotron { background-color: #e2f0fb; color: #007bff; }
+        .card { border: none; box-shadow: 0 4px 8px rgba(0,0,0,.05); }
+        .card-header { background-color: #007bff; color: white; font-weight: bold; }
+        .card-body { text-align: center; }
+        .card-body .btn { margin: 10px; padding: 15px 30px; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+<div class="container text-center">
+    <div class="jumbotron">
+        <h1 class="display-4">Bem-vindo à LibrAPI!</h1>
+        <p class="lead">Gerencie seus autores e livros de forma simples e eficiente.</p>
+        <hr class="my-4">
+        <p>Selecione uma opção abaixo para começar:</p>
+    </div>
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card mb-4">
+                <div class="card-header">Gerenciar Autores</div>
+                <div class="card-body">
+                    <p class="card-text">Adicione, edite, visualize e exclua informações sobre seus autores favoritos.</p>
+                    <a th:href="@{/web/authors}" class="btn btn-primary btn-lg">Acessar Autores</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card mb-4">
+                <div class="card-header">Gerenciar Livros</div>
+                <div class="card-body">
+                    <p class="card-text">Organize sua coleção de livros, vinculando-os aos seus autores.</p>
+                    <a th:href="@{/web/books}" class="btn btn-success btn-lg">Acessar Livros</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 text-muted">
+        <p>&copy; 2025 LibrAPI. Todos os direitos reservados.</p>
+    </footer>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
