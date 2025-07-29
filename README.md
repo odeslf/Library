@@ -1,6 +1,5 @@
 
-# RESTful Library API 📚
+# LibraAPI 📚
 
-
-This project is a straightforward RESTful API built with Spring Boot, designed to manage books and authors within an online library system. It serves as a study project, focusing on implementing standard CRUD (Create, Read, Update, Delete) operations, handling entity relationships, and demonstrating best practices for exception handling and testing.
+Um sistema web simples para gerenciar autores e livros, permitindo operações de criação, listagem, edição e exclusão. A aplicação foca na vinculação de livros a autores, proporcionando uma solução completa para organização de acervos.
 
